@@ -1,0 +1,98 @@
+﻿@model PublicModule.ViewModel.VMUserProfile
+
+@{
+    ViewData["Title"] = "UserProfile";
+    var countryMappings = ViewBag.CountryMappings as Dictionary<int, string>;
+}
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<h1 class="container">UserProfile</h1>
+
+
+<div class="container">
+    <div class="text-center">
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-5">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-5">
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+        <dt class="col-sm-5">
+            @Html.DisplayNameFor(model => model.Username)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.Username)
+        </dd>
+        <dt class="col-sm-5">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-5">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-5">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-5">
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt class="col-sm-5">
+            @Html.DisplayNameFor(model => model.IsConfirmed)
+        </dt>
+        <dd class="col-sm-5">
+            @Html.DisplayFor(model => model.IsConfirmed)
+        </dd>
+        <dt class="col-sm-5">
+            Country of Residence
+        </dt>
+        <dd class="col-sm-5">
+            @{
+                var countryName = countryMappings != null && countryMappings.ContainsKey(Model.CountryOfResidenceId) ? countryMappings[Model.CountryOfResidenceId] : string.Empty;
+            }
+            @countryName
+        </dd>
+    </dl>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <a asp-action="ChooseVideoContent" class="btn btn-primary">Back to Video</a>
+        </div>
+        <div class="col-md-6">
+            <form asp-action="ChangePassword" method="post">
+                <div class="form-group">
+                    <input type="submit" value="Change Password" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

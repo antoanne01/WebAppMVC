@@ -1,0 +1,83 @@
+﻿@model IEnumerable<PublicModule.ViewModel.ChooseVideoContent>
+
+@{
+    var page = (int)ViewData["page"];
+    var size = (int)ViewData["size"];
+    var orderBy = (string)ViewData["orderBy"];
+    var direction = (string)ViewData["direction"];
+    var pages = (int)ViewData["pages"];
+}
+
+<h1>Video Selection</h1>
+
+<div class="btn-group">
+    @for (var i = 0; i <= pages - 1; i++)
+    {
+        var currClass = page == i ? "btn-primary" : "btn-outline-primary";
+        <a asp-action="VideoTableBodyPartial"
+       asp-route-page="@i"
+       asp-route-size="@size"
+       asp-route-orderBy="@orderBy"
+       asp-route-direction="@direction"
+       data-page="@i"
+       class="pager-btn btn @currClass">@(i + 1)</a>
+    }
+</div>
+
+
+<div>
+    <form method="get" action="@Url.Action("ChooseVideoContent")">
+        <div class="form-group">
+            <label for="nameFilter">Filter by Name:</label>
+            <input type="text" id="nameFilter" name="nameFilter" class="form-control" />
+            <label for="descriptionFilter">Filter by Description:</label>
+            <input type="text" id="descriptionFilter" name="descriptionFilter" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin:5px">Filter</button>
+    </form>
+</div>
+
+
+<div class="row">
+    <table class="table">
+        <tbody id="video-table-body">
+            <partial name="_VideoTableBodyPartial" />
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(".pager-btn").click(function (event) {
+            event.preventDefault();
+
+            var page = $(this).data("page");
+
+            var ajaxData = {
+                page: page,
+                size: @size,
+                orderBy: "@orderBy",
+                direction: "@direction"
+            };
+
+            $.ajax({
+                type: "GET",
+                url: "/User/VideoTableBodyPartial",
+                data: ajaxData,
+                success: function (data) {
+                    $("#video-table-body").html(data);
+
+                    $(".pager-btn").removeClass("btn-primary");
+                    $(".pager-btn").addClass("btn-outline-primary");
+
+                    $(".pager-btn[data-page=" + page + "]").removeClass("btn-outline-primary");
+                    $(".pager-btn[data-page=" + page + "]").addClass("btn-primary");
+                },
+                error: function (data) {
+                    console.error("Ajax GET error", data);
+                }
+            });
+        });
+    </script>
+}

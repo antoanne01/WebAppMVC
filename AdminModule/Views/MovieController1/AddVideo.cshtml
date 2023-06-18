@@ -1,0 +1,47 @@
+﻿@model AdminModule.ViewModel.VMAddVideo
+
+@{
+    ViewData["Title"] = "AddVideo";
+}
+
+
+<form action="/Movie/Create" method="post">
+
+    <div class="form-group">
+        <label for="createdAt">Created At:</label>
+        <input type="datetime-local" id="createdAt" name="createdAt" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="genreId">Select Genre:</label>
+        <select id="genreId" name="genreId" class="form-control" required>
+            @foreach (var genre in ViewBag.GenreOptions)
+            {
+                <option value="@genre">@genre</option>
+            }
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <label for="totalSeconds">Total Seconds:</label>
+        <input type="number" id="totalSeconds" name="totalSeconds" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="streamingUrl">Streaming URL:</label>
+        <input type="" id="streamingUrl" name="streamingUrl" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="margin:3px">Save</button>
+</form>

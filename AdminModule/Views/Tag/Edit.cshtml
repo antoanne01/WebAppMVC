@@ -1,0 +1,60 @@
+﻿@model AdminModule.ViewModel.VMTag
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" id="name-input" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-primary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            // Get references to the input elements
+            var idInput = $("#id-input");
+            var nameInput = $("#name-input");
+
+            // Handle the change event of the combo box
+            idInput.on("change", function () {
+                // Get the selected value
+                var selectedValue = $(this).val();
+
+                // Make an AJAX request to fetch the corresponding name
+                $.ajax({
+                    url: '/Tag/GetNameById',
+                    type: 'GET',
+                    data: { id: selectedValue },
+                    success: function (result) {
+                        // Update the value in the name input field
+                        nameInput.val(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
+}

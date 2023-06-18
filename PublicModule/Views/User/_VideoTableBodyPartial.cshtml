@@ -1,0 +1,24 @@
+﻿@model IEnumerable<PublicModule.ViewModel.ChooseVideoContent>
+
+@for (var i = 0; i < Model.Count(); i += 3)
+{
+    <tr>
+        @for (var j = i; j < i + 3 && j < Model.Count(); j++)
+        {
+            var video = Model.ElementAt(j);
+
+            <td class="col-md-4 mb-4">
+                <div class="card" style="width: 100%;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" style="color: black;"><strong>@video.Name</strong></h5>
+                        <p class="card-text" style="color: black;">@video.Description</p>
+                        <div class="services-img-window">
+                            <img src="@Url.Action("Image", "User", new { id = video.ImageId })" class="card-img-top img-fluid">
+                        </div>
+                        <a href="@Url.Action("VideoContent", new { id = video.Id })" class="btn btn-primary">Movie Details</a>
+                    </div>
+                </div>
+            </td>
+        }
+    </tr>
+}

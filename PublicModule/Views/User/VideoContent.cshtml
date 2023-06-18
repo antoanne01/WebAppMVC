@@ -1,0 +1,68 @@
+﻿@model PublicModule.ViewModel.VMVideoContent
+
+@{
+    ViewData["Title"] = "VideoContent";
+    var genreMappings = ViewBag.GenreMappings as Dictionary<int, string>;
+}
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<div class="container">
+    <div class="text-center">
+        <h1>Video Content</h1>
+
+        <div>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-5">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-5">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt class="col-sm-5">
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd class="col-sm-5">
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+                <dt class="col-sm-5">
+                    Genre
+                </dt>
+                <dd class="col-sm-5">
+                    @{
+                        var genreName = genreMappings != null && genreMappings.ContainsKey(Model.GenreId) ? genreMappings[Model.GenreId] : string.Empty;
+                    }
+                    @genreName
+                </dd>
+                <dt class="col-sm-5">
+                    @Html.DisplayNameFor(model => model.TotalSeconds)
+                </dt>
+                <dd class="col-sm-5">
+                    @Html.DisplayFor(model => model.TotalSeconds)
+                </dd>
+                <dt class="col-sm-5">
+                    @Html.DisplayNameFor(model => model.StreamingUrl)
+                </dt>
+                <dd class="col-sm-5">
+                    <button onclick="playVideo('@Model.StreamingUrl')" class="btn btn-primary">Play Video</button>
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <a asp-action="ChooseVideoContent" class="btn btn-primary">Back to List</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function playVideo(url) {
+        window.location.href = url;
+    }
+</script>

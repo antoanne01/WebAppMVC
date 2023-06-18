@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>URL Notification</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const apiUrl = "http://localhost:6555/api/notifications";
+            const notificationsKey = "notifications";
+
+
+            function getFailedNotificationCount() {
+                fetch(`${apiUrl}/failedNotificationCount`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("failedNotificationCount").innerText = data;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+
+            function sendNotifications() {
+                fetch(`${apiUrl}/send`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Notifications sent successfully');
+                            getFailedNotificationCount();
+                        } else {
+                            throw new Error('Something went wrong');
+                        }
+                    })
+                    .catch(error => {
+                        alert(error.message);
+                    });
+            }
+
+            function loadNotifications() {
+                // Clear local storage
+                localStorage.removeItem(notificationsKey);
+
+                const storedNotifications = localStorage.getItem(notificationsKey);
+                if (storedNotifications) {
+                    const notifications = JSON.parse(storedNotifications);
+                    displayNotifications(notifications);
+                } else {
+                    // Fetch notifications from the API if not in local storage
+                    fetch(`${apiUrl}/getall`)
+                        .then(response => response.json())
+                        .then(notifications => {
+                            notifications.forEach(notification => {
+                                saveNotification(notification);
+                            });
+                            displayNotifications(notifications);
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }
+            }
+
+            const saveNotification = (notification) => {
+                const storedNotifications = localStorage.getItem(notificationsKey);
+                const notifications = storedNotifications ? JSON.parse(storedNotifications) : [];
+                const updatedNotifications = [...notifications, notification];
+                localStorage.setItem(notificationsKey, JSON.stringify(updatedNotifications));
+                displayNotifications(updatedNotifications);
+            };
+
+
+            function displayNotifications(notifications) {
+                const notificationList = document.getElementById("notificationList");
+                notificationList.innerHTML = "";
+
+                notifications.forEach(notification => {
+                    const listItem = document.createElement("li");
+                    listItem.innerText = `Receiver: ${notification.receiverEmail}, Subject: ${notification.subject}, Body: ${notification.body}`;
+                    notificationList.appendChild(listItem);
+                });
+            }
+
+            $("button").click(sendNotifications);
+
+            (function () {
+                getFailedNotificationCount();
+                loadNotifications();
+            })();
+
+        });
+
+    </script>
+</head>
+<body>
+    <h1>Notifications</h1>
+    <div>
+        <p>Failed notifications count: <span id="failedNotificationCount">0</span></p>
+        <button>Send notifications</button>
+    </div>
+    <div>
+        <h2>Stored Notifications</h2>
+        <ul id="notificationList"></ul>
+    </div>
+</body>
+</html>

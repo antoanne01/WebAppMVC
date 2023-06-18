@@ -1,0 +1,86 @@
+﻿@model IEnumerable<AdminModule.ViewModel.VMTag>
+
+@{
+    ViewData["Title"] = "Index";
+
+    var page = (int)ViewData["page"];
+    var size = (int)ViewData["size"];
+    var orderBy = (string)ViewData["orderBy"];
+    var direction = (string)ViewData["direction"];
+    var pages = (int)ViewData["pages"];
+}
+
+<h1>Tags</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+
+<div class="btn-group">
+    @for (var i = 0; i <= pages; i++)
+    {
+        var currClass = page == i ? "btn-primary" : "btn-outline-primary";
+        <a asp-action="Index"
+       asp-route-page="@i"
+       asp-route-size="@size"
+       asp-route-orderBy="@orderBy"
+       asp-route-direction="@direction"
+       data-page="@i"
+       class="pager-btn btn @currClass">@(i + 1)</a>
+    }
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+        </tr>
+    </thead>
+    <tbody id="tag-table-body">
+        <partial name="_TagTableBodyPartial" />
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        loadTagTable(0); // Load the initial page
+
+        function loadTagTable(page) {
+            var size = @(size);
+            var orderBy = "@(orderBy)";
+            var direction = "@(direction)";
+
+            var ajaxData = {
+                page: page,
+                size: size,
+                orderBy: orderBy,
+                direction: direction
+            };
+
+            $.ajax({
+                type: "GET",
+                url: "/Tag/TagTablePartial",
+                data: ajaxData,
+                success: function (data) {
+                    $("#tag-table-body").html(data);
+                },
+                error: function (data) {
+                    console.error("Ajax GET error", data);
+                }
+            });
+        }
+
+        $(document).on("click", ".pager-btn", function (event) {
+            event.preventDefault();
+            var page = $(this).data("page");
+            loadTagTable(page);
+        });
+    });
+</script>
